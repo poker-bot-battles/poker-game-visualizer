@@ -1,0 +1,82 @@
+<div class="game">
+
+    <!--------------------------------------------------->
+    <!-- Game -->
+    <!--------------------------------------------------->
+    <div class="table">
+        <app-poker-table [game]="game" [stage]="stage" [hand]="handIdx" [step]="actionIdx"></app-poker-table>
+    </div>
+
+    <!--------------------------------------------------->
+    <!-- NAVIGATION SMALL -->
+    <!--------------------------------------------------->
+    <div class="controls_container-small" style="margin-bottom: 1rem;" [ngClass] = "showControls ? 'hide' : ''" (click)="toggleControls()">
+        <div class="slider">
+            <p style="font-size: 2rem;">Hand <span class="number" style="font-size: 2.5rem;">{{handIdx+1}}</span></p>
+        </div>
+        
+    </div>
+    <div class="controls_container-small" [ngClass] = "showControls ? '' : 'hide'" >
+        <div class="toogle">
+            <div class="playback" [ngClass]="isPlay ? 'playback__play' : 'playback__pause'" (click)="toggle()"></div>
+        </div>
+
+
+
+        <div class="slider">
+
+            <mat-slider id="slider" #slider [(ngModel)]="actionIdx" min="0" max="{{getMaxActions()}}"
+                [tickInterval]="'1'" (input)="sliderOnChange($event.value)"></mat-slider>
+
+            <p>Current action <span class="number">{{actionIdx+1}}</span> of <span
+                    class="number">{{getMaxActions()+1}}</span></p>
+        </div>
+        <div class="slider">
+
+            <mat-slider id="handslider" #slider [(ngModel)]="handIdx" min="0" max="{{getMaxHands()}}"
+                [tickInterval]="'1'" (input)="handSliderOnChange($event.value)"></mat-slider>
+            <p>Current hand <span class="number">{{handIdx+1}}</span> of <span class="number">{{getMaxHands()+1}}</span>
+            </p>
+        </div>        
+        <div class="settings" (click)="toggleControls()">
+            [X]
+        </div>
+    </div>
+
+    <!------------------- -------------------------------->
+    <!-- NAVIGATION -->
+    <!--------------------------------------------------->
+    <!-- <div id="navigation_container">
+
+
+        <div id="controls_container">         
+
+            <div id="play_controls_container">
+                <div class="play_control">
+                    <button id="play_button" (click)="toggle()">
+                        {{isPlay ? "pause" : "play"}}
+                    </button>
+                </div>
+                <div class="play_control" id="speed_container">
+                    <p>speed</p>
+                    <input type="number" [(ngModel)]="speedInput" (input)="speedOnChange()" />
+                </div>
+                <div class="play_control" id="hand_count_container">
+
+                    <p>hand count</p>
+                    <input type="number" [(ngModel)]="handCountInput" (input)="handCountOnChange()" />
+                </div>
+
+            </div>
+        </div>
+        <div id="games_container">
+            <button class="game_button" [ngClass]="{'selected': isGameSelected(game)}" (click)="gameClick(game)"
+                *ngFor="let game of gamesUI">
+                {{game.stage_string}} Game {{game.number}}
+            </button>
+        </div>
+    </div> -->
+    <div class="sync">
+        <app-sync></app-sync>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+<div *ngIf="debug">
+    <p>Client id: {{service.id}}</p>
+    <p>Status: {{status}}</p>
+    <p>Last message: {{asStr()}}</p>
+</div>
+<div *ngIf="!debug">
+    <p>Id: {{service.id}}</p>
+</div>
