@@ -1,9 +1,9 @@
-<div class="poker-table">  
-
+<div class="poker-table">
   <div class="poker-table__community">
-
     <div class="poker-table__community__pot">
-      <div class="poker-table__community__pot__amount">Pot: ${{board.pot!}}</div>
+      <div class="poker-table__community__pot__amount">
+        Pot: ${{ board.pot! }}
+      </div>
       <div class="poker-table__community__pot__stack">
         <app-stacker [valor]="board.pot!"></app-stacker>
       </div>
@@ -12,71 +12,121 @@
       <app-card-group [cards]="board.cards!" [overlap]="true"></app-card-group>
     </div>
     <div class="poker-table__blinds">
-      <div>Blinds: {{board.smallBlind}} / {{board.bigBlind}}</div>
+      <div>Blinds: {{ board.smallBlind }} / {{ board.bigBlind }}</div>
     </div>
   </div>
 
   <div class="poker-table__game">
-    <div class="players" >
+    <div class="players">
       <div class="player num--1">
-        <app-poker-player class="player-component" [playerNo]="1" [player]="getPlayer(0)"
-          [imgurl]="'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'" 
-         >
+        <app-poker-player
+          class="player-component"
+          [playerNo]="1"
+          [player]="getPlayer(0)"
+          [imgurl]="
+            'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'
+          "
+        >
         </app-poker-player>
       </div>
       <div class="player num--2">
-        <app-poker-player class="player-component" [playerNo]="2" [player]="getPlayer(1)"
-          [imgurl]="'https://icons.iconarchive.com/icons/noctuline/wall-e/256/Wall-E-icon.png'" 
-           ></app-poker-player>
+        <app-poker-player
+          class="player-component"
+          [playerNo]="2"
+          [player]="getPlayer(1)"
+          [imgurl]="
+            'https://icons.iconarchive.com/icons/noctuline/wall-e/256/Wall-E-icon.png'
+          "
+        ></app-poker-player>
       </div>
       <div class="player num--3">
-        <app-poker-player class="player-component" [playerNo]="3" [player]="getPlayer(2)"
-          [imgurl]="'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'" 
-          >
+        <app-poker-player
+          class="player-component"
+          [playerNo]="3"
+          [player]="getPlayer(2)"
+          [imgurl]="
+            'https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/1dbc1935-6542-4ee3-822f-135cff4ba62c/ddqmmq5-044fe73c-9da2-42fd-a21e-f6da757cc730.png?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzFkYmMxOTM1LTY1NDItNGVlMy04MjJmLTEzNWNmZjRiYTYyY1wvZGRxbW1xNS0wNDRmZTczYy05ZGEyLTQyZmQtYTIxZS1mNmRhNzU3Y2M3MzAucG5nIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.FVozA5a0_EB1s-jQVvFE85ziitu290jr9_GOnEsHHa0'
+          "
+        >
         </app-poker-player>
       </div>
       <div class="player num--4">
-        <app-poker-player class="player-component" [playerNo]="4" [player]="getPlayer(3)"
-          [imgurl]="'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'" 
-           >
+        <app-poker-player
+          class="player-component"
+          [playerNo]="4"
+          [player]="getPlayer(3)"
+          [imgurl]="
+            'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'
+          "
+        >
         </app-poker-player>
       </div>
       <div class="player num--5">
-        <app-poker-player class="player-component" [playerNo]="5" [player]="getPlayer(4)"
-          [imgurl]="'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'" 
-          >
+        <app-poker-player
+          class="player-component"
+          [playerNo]="5"
+          [player]="getPlayer(4)"
+          [imgurl]="
+            'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'
+          "
+        >
         </app-poker-player>
       </div>
       <div class="player num--6">
-        <app-poker-player class="player-component" [playerNo]="6" [player]="getPlayer(5)"
-          [imgurl]="'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'" 
-          >
+        <app-poker-player
+          class="player-component"
+          [playerNo]="6"
+          [player]="getPlayer(5)"
+          [imgurl]="
+            'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'
+          "
+        >
         </app-poker-player>
       </div>
       <div class="player num--7">
-        <app-poker-player class="player-component" [playerNo]="7" [player]="getPlayer(6)"
-          [imgurl]="'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'" 
-           >
+        <app-poker-player
+          class="player-component"
+          [playerNo]="7"
+          [player]="getPlayer(6)"
+          [imgurl]="
+            'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'
+          "
+        >
         </app-poker-player>
       </div>
       <div class="player num--8">
-        <app-poker-player class="player-component" [playerNo]="8" [player]="getPlayer(7)"
-          [imgurl]="'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'"
-         >
+        <app-poker-player
+          class="player-component"
+          [playerNo]="8"
+          [player]="getPlayer(7)"
+          [imgurl]="
+            'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'
+          "
+        >
         </app-poker-player>
       </div>
       <div class="player num--9">
-        <app-poker-player class="player-component" [playerNo]="9" [player]="getPlayer(8)"
-          [imgurl]="'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'" 
-          >
+        <app-poker-player
+          class="player-component"
+          [playerNo]="9"
+          [player]="getPlayer(8)"
+          [imgurl]="
+            'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'
+          "
+        >
         </app-poker-player>
       </div>
       <div class="player num--10">
-        <app-poker-player class="player-component" [playerNo]="10" [player]="getPlayer(9)"
-          [imgurl]="'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'"
-          >
+        <app-poker-player
+          class="player-component"
+          [playerNo]="10"
+          [player]="getPlayer(9)"
+          [imgurl]="
+            'https://icons.iconarchive.com/icons/noctuline/wall-e/256/EVE-icon.png'
+          "
+        >
         </app-poker-player>
       </div>
     </div>
-
   </div>
+</div>
