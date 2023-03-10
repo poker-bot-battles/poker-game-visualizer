@@ -149,6 +149,23 @@ export class NewPokerGameService {
         this.isLoading.next(false);
       })
   }
+  setNewGameFromURL(path: string) {
+    this.isLoading.next(true);
+
+    this.http.get<HandJSON[]>(path)
+      .subscribe(x => {
+        this.game = x;
+        console.log("got new data ... ")
+        this.isLoading.next(false);
+      })
+  }
+
+  async setNewGameFromJSON(json: File) {
+    this.isLoading.next(true);
+    let fileData = await json.text();
+    this.game = JSON.parse(fileData) as HandJSON[];
+    this.isLoading.next(false);
+  }
 
   getTransformedData() {
     const game: Game = { hands: [] }
@@ -225,7 +242,7 @@ export class NewPokerGameService {
           } else {
             //pre stage
             // logic hvis player har smidt mere i end andre, så får han noget tilbage igen?
-            //eller også vinder han det ved rewards? tag start af det andet game? 
+            //eller også vinder han det ved rewards? tag start af det andet game?
             let prestep: Step | undefined;
             let newpot
             const onlyOneLeft = hand.active_players.length - filteredHandevents.slice(0, index).filter(x => x.type == 'action' && x.action == 0).length == 1;
@@ -235,7 +252,7 @@ export class NewPokerGameService {
             pot = newpot
             theHand.steps.push(prestep)
 
-            //main stage          
+            //main stage
 
             const cards = this.getCardsforBoard(filteredHandevents.slice(index).filter(x => x.type != 'win_chance').slice(0, 5))
             console.log(cards)
@@ -304,7 +321,7 @@ export class NewPokerGameService {
         pot = newpot
         theHand.steps.push(prestep)
       }
-      //add winner logic      
+      //add winner logic
       const stages: Stage[] = theHand.steps.filter(x => x.boardState?.stage != null).map(x => x.boardState!.stage!)
       const isShowdown = stages[stages.length - 1] == Stage.Showdown || stages[stages.length - 1] == Stage.River && !onlyOneLeft
 
@@ -516,7 +533,7 @@ export class NewPokerGameService {
     const updatedBettingState: BettingState = currentState
 
     let total_contribution = actionNumber > 1 ? actionNumber : currentRaise //call or raise
-    total_contribution = total_contribution <= currentState.totalStack ? total_contribution : currentState.totalStack //all in? 
+    total_contribution = total_contribution <= currentState.totalStack ? total_contribution : currentState.totalStack //all in?
     let stage_contribution = total_contribution - currentState.previous_contribution //adjust bet to current stage
 
     updatedBettingState.stage_contribution = stage_contribution

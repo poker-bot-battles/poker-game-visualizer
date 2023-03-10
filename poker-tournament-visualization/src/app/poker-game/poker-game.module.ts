@@ -13,6 +13,7 @@ import { StackerComponent } from '../stacker/stacker.component';
 import { ChipsComponent } from '../chips/chips.component';
 import { NewPokerGameService } from './new-poker-game.service';
 import { SyncModule } from '../sync/sync.module';
+import { DevMenuModule } from '../dev-menu/dev-menu.module';
 
 @NgModule({
   declarations: [
@@ -30,6 +31,7 @@ import { SyncModule } from '../sync/sync.module';
     MatGridListModule,
     FormsModule,
     SyncModule,
+    DevMenuModule,
   ],
   exports: [
     PokerGameComponent,

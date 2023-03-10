@@ -5,6 +5,7 @@ import { Subscription } from 'rxjs';
 import { SyncService } from '../sync/sync.service';
 import { HighlightService } from './highlight.service';
 import { first } from 'rxjs/operators';
+import { devMenuService } from '../dev-menu/dev-menu.service';
 
 @Component({
   selector: 'app-poker-game',
@@ -27,10 +28,12 @@ export class PokerGameComponent implements OnInit, OnChanges {
   showControls = false
 
   constructor(
-    private newPokerGameService: NewPokerGameService,
-    private testPokerGameService: TestPokerGameService,
-    private highlightService: HighlightService,
-    private syncService: SyncService) {
+      private newPokerGameService: NewPokerGameService,
+      private testPokerGameService: TestPokerGameService,
+      private highlightService: HighlightService,
+      private syncService: SyncService,
+      private devMenuService: devMenuService
+    ) {
     this.game = this.newPokerGameService.getTransformedData()
     this.highlightHandIds = this.highlightService.getHighlightedHands(this.newPokerGameService.game, this.game, this.secondsToSee * 1000 / this.speed);
     this.handIdx = this.highlightHandIds[0];
@@ -38,6 +41,15 @@ export class PokerGameComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    //subscribe to the dev menu service
+    this.devMenuService.onMsg().subscribe((msg) => {
+      if (msg == "TimerFinished") {
+        this.toggle();
+      } else if (msg == "LoadGame") {
+        this.loadGame();
+      }
+    })
+
     this.syncSubscription = this.syncService
       .onMessage()
       .subscribe((message) => {
@@ -72,19 +84,25 @@ export class PokerGameComponent implements OnInit, OnChanges {
           console.log(jsonToPlay);
           console.log("after logging json")
           this.newPokerGameService.setNewGame(jsonToPlay);
-          this
-            .newPokerGameService
-            .isLoading
-            .pipe()
-            .subscribe(() => {
-              console.log("finishing load ... ")
-              this.game = this.newPokerGameService.getTransformedData()
-              this.highlightHandIds = this.highlightService.getHighlightedHands(this.newPokerGameService.game, this.game, this.secondsToSee * 1000 / this.speed);
-              this.handIdx = this.highlightHandIds[0];
-              this.stage = Stage.Preflop;
-            })
+          this.loadGame();
         }
       });
+  }
+
+  loadGame() {
+    console.log("loading game ... ")
+    this
+    .newPokerGameService
+    .isLoading
+    .pipe()
+    .subscribe(() => {
+      console.log("finishing load ... ")
+      this.game = this.newPokerGameService.getTransformedData()
+      this.highlightHandIds = this.highlightService.getHighlightedHands(this.newPokerGameService.game, this.game, this.secondsToSee * 1000 / this.speed);
+      this.handIdx = this.highlightHandIds[0];
+      this.stage = Stage.Preflop;
+      this.interestingHandIdx = 0;
+    })
   }
 
   ngOnChanges(): void {

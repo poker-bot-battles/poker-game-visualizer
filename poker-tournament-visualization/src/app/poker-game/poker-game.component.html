@@ -14,7 +14,7 @@
         <div class="slider">
             <p style="font-size: 2rem;">Hand <span class="number" style="font-size: 2.5rem;">{{handIdx+1}}</span></p>
         </div>
-        
+
     </div>
     <div class="controls_container-small" [ngClass] = "showControls ? '' : 'hide'" >
         <div class="toogle">
@@ -37,7 +37,7 @@
                 [tickInterval]="'1'" (input)="handSliderOnChange($event.value)"></mat-slider>
             <p>Current hand <span class="number">{{handIdx+1}}</span> of <span class="number">{{getMaxHands()+1}}</span>
             </p>
-        </div>        
+        </div>
         <div class="settings" (click)="toggleControls()">
             [X]
         </div>
@@ -49,7 +49,7 @@
     <!-- <div id="navigation_container">
 
 
-        <div id="controls_container">         
+        <div id="controls_container">
 
             <div id="play_controls_container">
                 <div class="play_control">
@@ -76,7 +76,10 @@
             </button>
         </div>
     </div> -->
-    <div class="sync">
+    <!-- <div class="sync">
         <app-sync></app-sync>
+    </div> -->
+    <div class="devMenu">
+        <dev-menu></dev-menu>
     </div>
 </div>
