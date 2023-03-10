@@ -13,6 +13,7 @@ import { StackerComponent } from '../stacker/stacker.component';
 import { ChipsComponent } from '../chips/chips.component';
 import { NewPokerGameService } from './new-poker-game.service';
 import { SyncModule } from '../sync/sync.module';
+import { FastForwardIconComponent } from '../fast-forward-icon/fast-forward-icon.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { SyncModule } from '../sync/sync.module';
     CardGroupComponent,
     StackerComponent,
     ChipsComponent,
+    FastForwardIconComponent,
   ],
   imports: [
     CommonModule,
@@ -31,12 +33,7 @@ import { SyncModule } from '../sync/sync.module';
     FormsModule,
     SyncModule,
   ],
-  exports: [
-    PokerGameComponent,
-  ],
-  providers: [
-    PokerGameService,
-    NewPokerGameService
-  ]
+  exports: [PokerGameComponent],
+  providers: [PokerGameService, NewPokerGameService],
 })
 export class PokerGameModule {}
