@@ -126,7 +126,7 @@ p.name {
   text-align: center;
 }
 
-.player .player__win--chance{
+.player .player__win--chance {
   position: fixed;
   left: 41%;
   top: 4%;
@@ -148,10 +148,10 @@ p.name {
 }
 
 .player .player__avatar img {
-  object-fit: cover;
+  object-fit: contain;
   background: none;
   box-shadow: none;
-  transform: scale(70%);
+  transform: scale(150%);
 }
 
 .player .player__avatar.glow {
@@ -288,12 +288,12 @@ p.name {
   display: none;
 }
 
-.state_fold .player__call{  
+.state_fold .player__call {
   display: none;
 }
 
 .state_fold .player__avatar,
-.state_fold .player__cards{  
+.state_fold .player__cards {
   filter: brightness(0.5);
 }
 

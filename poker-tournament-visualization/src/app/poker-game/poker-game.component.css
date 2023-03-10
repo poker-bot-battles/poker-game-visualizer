@@ -23,6 +23,7 @@
 }
 
 .table {
+  margin-top: 48px;
   z-index: 1;
   height: auto;
   /*600px;*/
