@@ -105,5 +105,7 @@
       }
     }
   },
-  "defaultProject": "poker-tournament-visualization"
+  "cli": {
+    "analytics": false
+  }
 }
