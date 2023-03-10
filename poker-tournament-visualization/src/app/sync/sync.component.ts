@@ -10,13 +10,13 @@ import { Subscription } from 'rxjs';
 export class SyncComponent implements OnInit, OnDestroy {
   subscription: Subscription | undefined;
   messages: any[] = [];
-  public id: string = '';
-  public status: string = 'idle';
-  isPlaying: boolean = false;
-  private LOCALSTORAGE_ID = "ID"
+  public id = '';
+  public status = 'idle';
+  isPlaying = false;
+  private LOCALSTORAGE_ID = 'ID';
   public debug = false;
 
-  constructor(public service: SyncService) { }
+  constructor(public service: SyncService) {}
 
   ngOnDestroy(): void {
     this.subscription?.unsubscribe();
@@ -30,7 +30,11 @@ export class SyncComponent implements OnInit, OnDestroy {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const tableid = urlParams.get('table');
-    this.service.sendMessage({ cmd: 'connect', type: "client", requested_id: tableid });
+    this.service.sendMessage({
+      cmd: 'connect',
+      type: 'client',
+      requested_id: tableid,
+    });
   }
 
   private handleMessage(message: any) {

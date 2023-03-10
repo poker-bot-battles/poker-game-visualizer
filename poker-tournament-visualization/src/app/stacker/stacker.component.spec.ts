@@ -8,9 +8,8 @@ describe('StackerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ StackerComponent ]
-    })
-    .compileComponents();
+      declarations: [StackerComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

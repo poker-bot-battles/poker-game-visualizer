@@ -31,12 +31,7 @@ import { SyncModule } from '../sync/sync.module';
     FormsModule,
     SyncModule,
   ],
-  exports: [
-    PokerGameComponent,
-  ],
-  providers: [
-    PokerGameService,
-    NewPokerGameService
-  ]
+  exports: [PokerGameComponent],
+  providers: [PokerGameService, NewPokerGameService],
 })
 export class PokerGameModule {}

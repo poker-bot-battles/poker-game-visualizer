@@ -1,17 +1,22 @@
 import { Injectable } from '@angular/core';
 import * as data from './games.json';
 
-
 export interface Player {
-  id : number;
+  id: number;
   cards: string[];
   name: string;
-  dealer : boolean;
-  seatstate : SeatState;
+  dealer: boolean;
+  seatstate: SeatState;
 }
 
-export type SeatState = 'active' | 'not-active' | 'out' | 'fold' | 'small-blind' | 'big-blind' | undefined;
-
+export type SeatState =
+  | 'active'
+  | 'not-active'
+  | 'out'
+  | 'fold'
+  | 'small-blind'
+  | 'big-blind'
+  | undefined;
 
 export interface PokerGame {
   game_nbr: string;
@@ -66,21 +71,21 @@ export interface PlayerStateOld {
 }
 
 export enum Stage {
-  Preflop = "PREFLOP",
-  Flop = "FLOP",
-  Turn = "TURN",
-  River = "RIVER",
-  Showdown = "SHOWDOWN",
-  EndHidden = "END_HIDDEN"
+  Preflop = 'PREFLOP',
+  Flop = 'FLOP',
+  Turn = 'TURN',
+  River = 'RIVER',
+  Showdown = 'SHOWDOWN',
+  EndHidden = 'END_HIDDEN',
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PokerGameService {
   game: PokerGame[];
 
   constructor() {
-    this.game = data
+    this.game = data;
   }
 }
