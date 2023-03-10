@@ -38,6 +38,7 @@ export class PokerGameComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    console.log("init poker game ... ")
     this.syncSubscription = this.syncService
       .onMessage()
       .subscribe((message) => {
@@ -68,10 +69,9 @@ export class PokerGameComponent implements OnInit, OnChanges {
           }
           console.log("load instruction ... ")
           const jsonnr = this.syncService.id;
-          const jsonToPlay = 'table-'+ jsonnr +'.json';
-          console.log(jsonToPlay);
+          console.log(jsonnr);
           console.log("after logging json")
-          this.newPokerGameService.setNewGame(jsonToPlay);
+          this.newPokerGameService.setNewGame(jsonnr);
           this
             .newPokerGameService
             .isLoading

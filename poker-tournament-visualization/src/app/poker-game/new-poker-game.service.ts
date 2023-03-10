@@ -138,7 +138,7 @@ export class NewPokerGameService {
     this.isLoading.next(false);
   }
 
-  setNewGame(path: string) {
+  setNewGame(path: string | null) {
     // "testrunde1/run-20220424-214441-0.json"
     this.isLoading.next(true);
 
