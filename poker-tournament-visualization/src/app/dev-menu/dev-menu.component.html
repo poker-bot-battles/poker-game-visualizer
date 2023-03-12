@@ -8,14 +8,14 @@
     <p class="inputTitle">Remote json url:</p>
     <input name="jsonUrl" [(ngModel)]="jsonUrl" #ctrl="ngModel" type="text" placeholder="http://url..."/>
     <button (click)="loadJsonUrl()">Get Now</button>
-    <h3>{{activeJSON == "" ? "No active json" : "Active game: "  + activeJSON}}</h3>
+    <h3>{{activeJSON ? "Active game: "  + activeJSON : "No active json"}}</h3>
 
 
     <h2>Sync/Autostart</h2>
     <p class="inputTitle">Remote sync url:</p>
     <input name="syncUrl" [(ngModel)]="syncUrl" type="text" placeholder="http://url..."/>
     <button (click)="getRemoteSyncTime()">Sync Now</button>
-    <h3 type="text">{{timestamp == "" ? "No timestamp set" : "Starting at: "  + timestamp}}</h3>
+    <h3 type="text">{{timestamp ? "Starting at: "  + timestamp : "No timestamp set"}}</h3>
     <h2 class="countdown">{{countdown}} Seconds</h2>
   </div>
 </div>

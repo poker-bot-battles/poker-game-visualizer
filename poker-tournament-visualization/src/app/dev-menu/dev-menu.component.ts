@@ -60,7 +60,7 @@ export class DevMenuComponent implements OnInit, OnDestroy  {
   }
 
   loadJsonUrl():void {
-    if (!this.jsonUrl || this.jsonUrl == "") return;
+    if (!this.jsonUrl) return;
     console.log("Getting: ",this.jsonUrl);
     this.activeJSON = this.jsonUrl;
     this.newPokerGameService.setNewGameFromURL(this.jsonUrl);
@@ -75,7 +75,7 @@ export class DevMenuComponent implements OnInit, OnDestroy  {
 
   // Get Timestamp from server and set countdown
   async getRemoteSyncTime(): Promise<void> {
-    if (!this.syncUrl || this.syncUrl == "") return;
+    if (!this.syncUrl) return;
     this.http.get<TimestampJSON>(this.syncUrl)
       .subscribe(data => {
         if (!data["timestamp"]) return;
