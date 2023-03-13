@@ -11,6 +11,7 @@ import {
 } from 'rxjs/operators';
 export const WS_ENDPOINT = environment.wsEndpoint;
 export const RECONNECT_INTERVAL = environment.reconnectInterval;
+export const TIME_ENDPOINT = environment.timeEndpoint;
 
 @Injectable({
   providedIn: 'root',
