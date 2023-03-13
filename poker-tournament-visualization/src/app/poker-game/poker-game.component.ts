@@ -120,7 +120,6 @@ export class PokerGameComponent implements OnInit, OnChanges {
   }
 
   movestep() {
-    console.log(this.interestingHands[this.interestingHandIdx].steps[this.actionIdx].timeconstant * this.speed)
     setTimeout(() => {
       if (this.isPlay) {
         if (this.actionIdx < this.getMaxActions()) {
