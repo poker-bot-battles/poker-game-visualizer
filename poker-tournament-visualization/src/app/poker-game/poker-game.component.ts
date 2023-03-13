@@ -1,10 +1,11 @@
 import { Component, OnChanges, OnInit } from '@angular/core';
 import { Game, NewPokerGameService, Stage, Hand } from './new-poker-game.service';
 import { TestPokerGameService } from './test-poker-game.service';
-import { Subscription } from 'rxjs';
-import { SyncService } from '../sync/sync.service';
+import { Subscription, interval } from 'rxjs';
+import { SyncService, TIME_ENDPOINT } from '../sync/sync.service';
+import { HttpClient } from '@angular/common/http';
 import { HighlightService } from './highlight.service';
-import { first } from 'rxjs/operators';
+import { first, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-poker-game',
@@ -25,11 +26,14 @@ export class PokerGameComponent implements OnInit, OnChanges {
   endReached: boolean = false
   speed: number = 300
   showControls = false
+  delay: number = 30 * 60 * 1000
+  timeSubscription: Subscription | undefined;
 
   constructor(
     private newPokerGameService: NewPokerGameService,
     private testPokerGameService: TestPokerGameService,
     private highlightService: HighlightService,
+    private httpClient: HttpClient,
     private syncService: SyncService) {
     this.game = this.newPokerGameService.getTransformedData()
     this.highlightHandIds = this.highlightService.getHighlightedHands(this.newPokerGameService.game, this.game, this.secondsToSee * 1000 / this.speed);
@@ -38,54 +42,57 @@ export class PokerGameComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    console.log("init poker game ... ")
-    this.syncSubscription = this.syncService
-      .onMessage()
-      .subscribe((message) => {
-        if (message && message['cmd'] == 'start') {
-          console.log("will start when loading is done ... ")
+    console.log("COMP init poker game ... ")
+    // use api endpoint to get the delay every 30 seconds
+    this.startTimer();
 
-          if (this.newPokerGameService.isLoading) {
-            this
-              .newPokerGameService
-              .isLoading
-              .pipe(first())
-              .subscribe(() => {
-                console.log("starting after waiting ... ")
-                if (!this.isPlay) {
-                  this.toggle();
-                }
-              })
-          } else {
-            console.log("already loaded starting now ... ")
-            if (!this.isPlay) {
-              this.toggle();
-            }
-          }
-
-        } else if (message && message['cmd'] == 'load') {
-          if (this.isPlay) {
-            this.toggle();
-          }
-          console.log("load instruction ... ")
-          const jsonnr = this.syncService.id;
-          console.log(jsonnr);
-          console.log("after logging json")
-          this.newPokerGameService.setNewGame(jsonnr);
-          this
-            .newPokerGameService
-            .isLoading
-            .pipe()
-            .subscribe(() => {
-              console.log("finishing load ... ")
-              this.game = this.newPokerGameService.getTransformedData()
-              this.highlightHandIds = this.highlightService.getHighlightedHands(this.newPokerGameService.game, this.game, this.secondsToSee * 1000 / this.speed);
-              this.handIdx = this.highlightHandIds[0];
-              this.stage = Stage.Preflop;
-            })
-        }
-      });
   }
+  ngOnDestroy() {
+    this.stopTimer();
+  }
+
+  startTimer() {
+    this.timeSubscription = interval(20000).subscribe(() => {
+      this.httpClient.get(TIME_ENDPOINT).pipe(first()).subscribe((data: any) => {
+        console.log('COMP got time from api', data);
+        
+        var startTime = parseInt(data);
+        const delay = (startTime * 1000 - Date.now());
+        console.log('COMP starting in', delay / 1000 / 60, 'minutes');
+        
+        if (delay < 0) {
+          setTimeout(() => {
+            this.loadGame();
+            this.stopTimer()
+            console.log("COMP starting load and stopping timer ... ")
+          }, delay-1000);
+
+          setTimeout(() => {if (!this.isPlay) {
+                          this.toggle()}}, delay)}
+      });
+    });
+  }
+
+  stopTimer() {
+    if (this.timeSubscription) {
+      this.timeSubscription.unsubscribe();
+    }
+  }
+  loadGame() {
+    this.newPokerGameService.setNewGame(this.syncService.id);
+        this
+          .newPokerGameService
+          .isLoading
+          .pipe()
+          .subscribe(() => {
+            console.log("COMP finishing load ... ")
+            this.game = this.newPokerGameService.getTransformedData()
+            this.highlightHandIds = this.highlightService.getHighlightedHands(this.newPokerGameService.game, this.game, this.secondsToSee * 1000 / this.speed);
+            this.handIdx = this.highlightHandIds[0];
+            this.stage = Stage.Preflop;
+          })
+        }
+
 
   ngOnChanges(): void {
   }
@@ -113,6 +120,7 @@ export class PokerGameComponent implements OnInit, OnChanges {
   }
 
   movestep() {
+    console.log(this.interestingHands[this.interestingHandIdx].steps[this.actionIdx].timeconstant * this.speed)
     setTimeout(() => {
       if (this.isPlay) {
         if (this.actionIdx < this.getMaxActions()) {
