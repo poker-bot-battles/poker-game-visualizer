@@ -1,22 +1,17 @@
-import {
-  Component,
-  OnInit,
-  Input,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
   selector: 'app-stacker',
   templateUrl: './stacker.component.html',
-  styleUrls: ['./stacker.component.css'],
+  styleUrls: ['./stacker.component.css']
 })
 export class StackerComponent implements OnInit, OnChanges {
+
   @Input() valor: number = 0;
 
   chipsStacked: string[] = [];
 
-  constructor() {}
+  constructor() { }
 
   ngOnInit() {
     this.recalcChips();
@@ -36,17 +31,18 @@ export class StackerComponent implements OnInit, OnChanges {
       100
       250
       500
-      1k
-      2K
-      5K
-      10K
-      25k
-      50k
-      100k
-      250k
-      500k
-      1M
-      5M
+       1k
+       2K
+       5K
+       10K
+       25k
+       50k
+       100k
+       250k
+       500k
+       1M
+       5M
+       5M
     */
     let fichas = this.valor;
 
@@ -230,6 +226,7 @@ export class StackerComponent implements OnInit, OnChanges {
       fichas = fichas % 5;
     }
 
+
     const v1 = fichas / 1;
     if (v1 >= 1) {
       const cant = Math.floor(v1);
@@ -238,9 +235,7 @@ export class StackerComponent implements OnInit, OnChanges {
       }
     }
     //console.log('Real stacked chips', chipsToStack);
-    this.chipsStacked = chipsToStack.slice(
-      chipsToStack.length - 25,
-      chipsToStack.length
-    );
+    this.chipsStacked = chipsToStack.slice(chipsToStack.length - 25, chipsToStack.length);
   }
+
 }
