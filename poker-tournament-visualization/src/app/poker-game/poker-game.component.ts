@@ -22,9 +22,9 @@ export class PokerGameComponent implements OnInit, OnChanges {
   secondsToSee: number = 15 * 60;
   game: Game;
   stage: Stage;
-  actionIdx: number = 0;
-  handIdx: number = 0;
-  isPlay: boolean = false;
+  actionIdx = 0;
+  handIdx = 0;
+  isPlay = false;
   interestingHandIdx = 0;
   interestingHands: Hand[] = [];
   endReached: boolean = false;
@@ -87,7 +87,7 @@ export class PokerGameComponent implements OnInit, OnChanges {
             this.highlightHandIds = this.highlightService.getHighlightedHands(
               this.newPokerGameService.game,
               this.game,
-              (this.secondsToSee * 1000) / this.speed
+              (this.secondsToSee * 1000) / this.speed,
             );
             this.handIdx = this.highlightHandIds[0];
             this.stage = Stage.Preflop;
@@ -170,8 +170,8 @@ export class PokerGameComponent implements OnInit, OnChanges {
       return;
     }
     const newValue = val ?? this.actionIdx;
-    let currentStage = Stage.Preflop;
-    let stagelist = this.game.hands[this.handIdx].steps
+    const currentStage = Stage.Preflop;
+    const stagelist = this.game.hands[this.handIdx].steps
       .slice(0, newValue + 1)
       .filter((obj) => obj.boardState?.stage != null);
     this.stage =

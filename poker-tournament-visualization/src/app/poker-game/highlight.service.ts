@@ -5,17 +5,19 @@ import { Game, HandEvent, HandJSON, Players } from './new-poker-game.service';
   providedIn: 'root',
 })
 export class HighlightService {
-  constructor() {}
+  constructor() {
+    null;
+  }
 
   getHighlightedHands(
     gameRaw: HandJSON[],
     gameTransformed: Game,
-    timerestrain: number
+    timerestrain: number,
   ): number[] {
     const highlightedGame: Game = { hands: [] };
 
-    //add highlight logic
-    var gameList: HandJSON[] = [];
+    // add highlight logic
+    const gameList: HandJSON[] = [];
     for (let i = 0; i < gameRaw.length; i++) {
       gameList.push(gameRaw[i]);
     }
@@ -24,7 +26,7 @@ export class HighlightService {
       .sort((a, b) => (b.highlight_score ?? 0) - (a.highlight_score ?? 0))
       .map((x) => x.hand_count);
     const highlights: number[] = [];
-    var sumTimeConstant: number = 0;
+    let sumTimeConstant: number = 0;
     sortedGames.forEach((x) => {
       if (timerestrain > sumTimeConstant) {
         sumTimeConstant =
@@ -34,7 +36,7 @@ export class HighlightService {
     });
     console.log(
       'highlight',
-      highlights.sort((a, b) => a - b)
+      highlights.sort((a, b) => a - b),
     );
     return highlights.sort((a, b) => a - b);
   }
@@ -45,16 +47,16 @@ export class HighlightService {
       const defeatedPlayersNextHandOrUndefined = hands[i + 1]?.defeated_players;
       hands[i].highlight_score = this.getHandScore(
         handData,
-        defeatedPlayersNextHandOrUndefined
+        defeatedPlayersNextHandOrUndefined,
       );
     }
   }
 
   getHandScore(
     handData: HandJSON,
-    defeatedPlayersNextHandOrUndefined?: Players[]
+    defeatedPlayersNextHandOrUndefined?: Players[],
   ): number {
-    var score = 0;
+    let score = 0;
 
     if (this.anyElimination(handData, defeatedPlayersNextHandOrUndefined)) {
       score += 100000;
@@ -68,7 +70,7 @@ export class HighlightService {
 
   anyElimination(
     handData: HandJSON,
-    defeatedPlayersNextHandOrUndefined?: Players[]
+    defeatedPlayersNextHandOrUndefined?: Players[],
   ): boolean {
     if (this.isLastHand(defeatedPlayersNextHandOrUndefined)) {
       return true;
@@ -103,13 +105,13 @@ export class HighlightService {
     const postFlopEvents = handData.hand_events.slice(flopIndex);
     const foldActionIndexes = postFlopEvents.reduce(
       (res, x, idx) => (x.action === 0 ? res.concat([idx]) : res),
-      new Array<number>()
+      new Array<number>(),
     );
     if (foldActionIndexes.length === 0) {
       return 0;
     }
 
-    var outplayScore = 0;
+    let outplayScore = 0;
     foldActionIndexes.forEach((idx) => {
       const playerid = postFlopEvents[idx].player;
       const foldingWinChance = postFlopEvents

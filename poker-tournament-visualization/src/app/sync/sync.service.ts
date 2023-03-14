@@ -21,7 +21,9 @@ export class SyncService {
   private messagesSubject$ = new Subject<any>();
   // public messages$ = this.messagesSubject$.pipe(switchAll(), catchError(e => { throw e }));
 
-  constructor() { }
+  constructor() {
+    null;
+  }
 
   /**
    * Creates a new WebSocket subject and send it to the messages subject
@@ -36,16 +38,16 @@ export class SyncService {
           this.messagesSubject$.next(msg);
         }, // Called whenever there is a message from the server.
         (err) => console.log(err), // Called if at any point WebSocket API signals some kind of error.
-        () => console.log('complete') // Called when connection is closed (for whatever reason).
+        () => console.log('complete'), // Called when connection is closed (for whatever reason).
       );
       const messages = this.socket$!.pipe(
         cfg.reconnect ? this.reconnect : (o) => o,
         tap({
           error: (error) => console.log('abc' + error),
         }),
-        catchError((_) => EMPTY)
+        catchError((_) => EMPTY),
       );
-      //toDO only next an observable if a new subscription was made double-check this
+      // toDO only next an observable if a new subscription was made double-check this
       // this.messagesSubject$.next(messages);
       // this.messagesSubject$.error((x: any) => console.error('asdf' + x));
       // this.messagesSubject$.complete();
@@ -65,9 +67,9 @@ export class SyncService {
       retryWhen((errors) =>
         errors.pipe(
           tap((val) => console.log('[Data Service] Try to reconnect', val)),
-          delayWhen((_) => timer(RECONNECT_INTERVAL))
-        )
-      )
+          delayWhen((_) => timer(RECONNECT_INTERVAL)),
+        ),
+      ),
     );
   }
 
