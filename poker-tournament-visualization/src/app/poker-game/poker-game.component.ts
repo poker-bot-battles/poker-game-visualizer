@@ -27,23 +27,27 @@ export class PokerGameComponent implements OnInit, OnChanges {
   isPlay = false;
   interestingHandIdx = 0;
   interestingHands: Hand[] = [];
-  endReached = false;
-  speed = 300;
+  endReached: boolean = false;
+  speed: number; // milliseconds pr. action
+  defaultSpeed: number = 300; // milliseconds pr. action (multiplied by some constant based on the stage - see new-poker-game.service.ts)
+  fastForwardSpeed: number = 100; // milliseconds pr. action (not multiplied by any constant)
+  fastForwarding: boolean = false;
   showControls = false;
 
   constructor(
     private newPokerGameService: NewPokerGameService,
     private testPokerGameService: TestPokerGameService,
     private highlightService: HighlightService,
-    private syncService: SyncService,
+    private syncService: SyncService
   ) {
     this.game = this.newPokerGameService.getTransformedData();
+    this.speed = this.defaultSpeed;
     this.highlightHandIds = this.highlightService.getHighlightedHands(
       this.newPokerGameService.game,
       this.game,
-      (this.secondsToSee * 1000) / this.speed,
+      (this.secondsToSee * 1000) / this.defaultSpeed
     );
-    this.handIdx = this.highlightHandIds[0];
+    this.handIdx = 0;
     this.stage = Stage.Preflop;
   }
 
@@ -98,21 +102,30 @@ export class PokerGameComponent implements OnInit, OnChanges {
     this.showControls = !this.showControls;
   }
 
+  getTimeForAction(handIdx: number, actionIdx: number) {
+    if (this.highlightHandIds?.includes(handIdx)) {
+      this.fastForwarding = false;
+      return (
+        this.game.hands[handIdx].steps[actionIdx].timeconstant *
+        this.defaultSpeed
+      );
+    } else {
+      this.fastForwarding = true;
+      return this.fastForwardSpeed;
+    }
+  }
+
   toggle() {
     this.isPlay = !this.isPlay;
     if (this.isPlay && this.game) {
       this.endReached = false;
-      this.interestingHandIdx = 0;
-      this.interestingHands = this.game.hands.filter((x) => {
-        if (this.highlightHandIds) {
-          return this.highlightHandIds.includes(x.handId);
-        } else {
-          return false;
-        }
-      });
-      this.handSliderOnChange(
-        this.interestingHands[this.interestingHandIdx].handId,
-      );
+      if (this.highlightHandIds?.includes(this.handIdx)) {
+        this.fastForwarding = false;
+        this.speed = this.defaultSpeed;
+      } else {
+        this.fastForwarding = true;
+        this.speed = this.fastForwardSpeed;
+      }
       this.movestep();
     }
   }
@@ -123,15 +136,20 @@ export class PokerGameComponent implements OnInit, OnChanges {
         if (this.actionIdx < this.getMaxActions()) {
           this.sliderOnChange(this.actionIdx + 1);
         } else if (this.actionIdx == this.getMaxActions() && this.endReached) {
-          this.interestingHandIdx += 1;
+          const newHandIdx = this.handIdx + 1;
           this.endReached = false;
           if (
             this.highlightHandIds &&
             this.interestingHandIdx < this.highlightHandIds.length
           ) {
-            this.handSliderOnChange(
-              this.interestingHands[this.interestingHandIdx].handId,
-            );
+            if (this.highlightHandIds.includes(newHandIdx)) {
+              this.fastForwarding = false;
+              this.speed = this.defaultSpeed;
+            } else {
+              this.fastForwarding = true;
+              this.speed = this.fastForwardSpeed;
+            }
+            this.handSliderOnChange(newHandIdx);
           } else {
             this.handSliderOnChange(this.getMaxHands());
             this.sliderOnChange(this.getMaxActions());
@@ -144,7 +162,7 @@ export class PokerGameComponent implements OnInit, OnChanges {
           this.movestep();
         }
       }
-    }, this.interestingHands[this.interestingHandIdx].steps[this.actionIdx].timeconstant * this.speed);
+    }, this.getTimeForAction(this.handIdx, this.actionIdx));
   }
 
   setStage(val?: number): void {

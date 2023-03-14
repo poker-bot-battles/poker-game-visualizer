@@ -26,7 +26,7 @@ export class HighlightService {
       .sort((a, b) => (b.highlight_score ?? 0) - (a.highlight_score ?? 0))
       .map((x) => x.hand_count);
     const highlights: number[] = [];
-    let sumTimeConstant = 0;
+    let sumTimeConstant: number = 0;
     sortedGames.forEach((x) => {
       if (timerestrain > sumTimeConstant) {
         sumTimeConstant =

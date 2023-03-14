@@ -12,7 +12,7 @@ import {
   styleUrls: ['./stacker.component.css'],
 })
 export class StackerComponent implements OnInit, OnChanges {
-  @Input() valor = 0;
+  @Input() valor: number = 0;
 
   chipsStacked: string[] = [];
 
@@ -36,18 +36,17 @@ export class StackerComponent implements OnInit, OnChanges {
       100
       250
       500
-       1k
-       2K
-       5K
-       10K
-       25k
-       50k
-       100k
-       250k
-       500k
-       1M
-       5M
-       5M
+      1k
+      2K
+      5K
+      10K
+      25k
+      50k
+      100k
+      250k
+      500k
+      1M
+      5M
     */
     let fichas = this.valor;
 
