@@ -1,8 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SyncService } from '../sync/sync.service';
-import { MatLegacyTableDataSource as MatTableDataSource, MatLegacyTableModule as MatTableModule } from '@angular/material/legacy-table';
-import { UntypedFormArray, UntypedFormGroup, UntypedFormBuilder, UntypedFormControl } from '@angular/forms';
+import { MatLegacyTableDataSource as MatTableDataSource } from '@angular/material/legacy-table';
+import {
+  UntypedFormArray,
+  UntypedFormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
+} from '@angular/forms';
 
 export interface Client {
   Id?: string;
@@ -17,9 +22,9 @@ export interface Client {
 export class ControlPanelComponent implements OnInit, OnDestroy {
   subscription: Subscription | undefined;
   messages: any[] = [];
-  public id: string = '';
-  public status: string = 'idle';
-  isPlaying: boolean = false;
+  public id = '';
+  public status = 'idle';
+  isPlaying = false;
   clients: Client[] = [];
   displayedColumns: string[] = ['id', 'table'];
   form: UntypedFormGroup;
@@ -28,10 +33,10 @@ export class ControlPanelComponent implements OnInit, OnDestroy {
 
   constructor(
     private service: SyncService,
-    private _formBuilder: UntypedFormBuilder
+    private _formBuilder: UntypedFormBuilder,
   ) {
     this.form = this._formBuilder.group({
-      tables: this._formBuilder.array([])
+      tables: this._formBuilder.array([]),
     });
   }
 
@@ -68,12 +73,12 @@ export class ControlPanelComponent implements OnInit, OnDestroy {
           })
           .forEach((x) => {
             this.clients.push({ Id: x });
-            this.form.setControl('tables', this.getClientsAsFormArray())
+            this.form.setControl('tables', this.getClientsAsFormArray());
             // this.form.addControl('tables', this.mapToGroup({ Id: x }))
           });
 
         this.clients = this.clients.filter(
-          (x) => clients.findIndex((y) => x.Id == y) != -1
+          (x) => clients.findIndex((y) => x.Id == y) != -1,
         );
         this.dataSource = new MatTableDataSource(this.clients);
       }
@@ -81,9 +86,9 @@ export class ControlPanelComponent implements OnInit, OnDestroy {
   }
 
   getClientsAsFormArray(): UntypedFormArray {
-    const fgs = this.clients.map(x => {
+    const fgs = this.clients.map((x) => {
       return this.mapToGroup(x);
-    })
+    });
     return new UntypedFormArray(fgs);
   }
 
@@ -96,8 +101,8 @@ export class ControlPanelComponent implements OnInit, OnDestroy {
   }
 
   onTableChange(event: any, element: any) {
-    console.log(event)
-    const client = this.clients.find(x => x.Id == element.value.id)
+    console.log(event);
+    const client = this.clients.find((x) => x.Id == element.value.id);
     if (client) {
       if (event?.target?.value) {
         client.Table = event?.target.value;
@@ -110,12 +115,18 @@ export class ControlPanelComponent implements OnInit, OnDestroy {
   }
 
   startForAll() {
-    this.service.sendMessage({ cmd: 'start', tables: this.form.value['tables'] });
-    this.status = "sent start command"
+    this.service.sendMessage({
+      cmd: 'start',
+      tables: this.form.value['tables'],
+    });
+    this.status = 'sent start command';
   }
 
   loadForAll() {
-    this.service.sendMessage({ cmd: 'load', tables: this.form.value['tables'] });
-    this.status = "sent load command"
+    this.service.sendMessage({
+      cmd: 'load',
+      tables: this.form.value['tables'],
+    });
+    this.status = 'sent load command';
   }
 }

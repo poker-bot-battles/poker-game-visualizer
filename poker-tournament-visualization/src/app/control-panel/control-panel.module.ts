@@ -19,4 +19,4 @@ import { MatLegacyInputModule as MatInputModule } from '@angular/material/legacy
     MatInputModule,
   ],
 })
-export class ControlPanelModule { }
+export class ControlPanelModule {}

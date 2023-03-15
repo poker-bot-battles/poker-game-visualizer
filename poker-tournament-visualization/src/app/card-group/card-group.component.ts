@@ -9,17 +9,20 @@ import * as core from '@angular/core';
 })
 export class CardGroupComponent implements core.OnInit, core.OnChanges {
   @core.Input() cards: string[] = [];
-  @core.Input() overlap: boolean = false;
+  @core.Input() overlap = false;
   cardsToShow: string[] = [];
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() {
+    null;
   }
 
-  ngOnChanges(changes: { [property: string]: core.SimpleChange }): void {
-    //console.log('card group changes');
-    //console.log(JSON.stringify(changes));
+  ngOnInit(): void {
+    null;
+  }
+
+  ngOnChanges(): void {
+    // console.log('card group changes');
+    // console.log(JSON.stringify(changes));
     this.cardsToShow = this.cards.map(this.mapToAsset).map(this.mapToPath);
   }
 
