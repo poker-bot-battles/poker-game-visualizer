@@ -9,7 +9,8 @@ import { MatLegacySliderModule as MatSliderModule } from '@angular/material/lega
 import { SyncModule } from './sync/sync.module';
 import { ControlPanelModule } from './control-panel/control-panel.module';
 import { HttpClientModule } from '@angular/common/http';
-
+import { DevMenuModule } from './dev-menu/dev-menu.module';
+import { FormsModule  } from '@angular/forms';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -21,6 +22,8 @@ import { HttpClientModule } from '@angular/common/http';
     SyncModule,
     ControlPanelModule,
     HttpClientModule,
+    DevMenuModule,
+    FormsModule,
   ],
   exports: [],
   providers: [],

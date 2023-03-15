@@ -150,9 +150,27 @@ export class NewPokerGameService {
 
     this.http.get<HandJSON[]>(DATA_ENDPOINT + path).subscribe((x) => {
       this.game = x;
-      console.log('got new data ... ');
+      console.log("Got new game data from: " + DATA_ENDPOINT + path )
       this.isLoading.next(false);
     });
+  }
+  setNewGameFromURL(path: string) {
+    this.isLoading.next(true);
+
+    this.http.get<HandJSON[]>(path)
+      .subscribe(x => {
+        this.game = x;
+        console.log("Got new game data from: " + path)
+        this.isLoading.next(false);
+      })
+  }
+
+  async setNewGameFromJSON(json: File) {
+    this.isLoading.next(true);
+    let fileData = await json.text();
+    this.game = JSON.parse(fileData) as HandJSON[];
+    console.log("Got new game data from: " + json.name)
+    this.isLoading.next(false);
   }
 
   getTransformedData() {

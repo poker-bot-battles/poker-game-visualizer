@@ -13,6 +13,7 @@ import { StackerComponent } from '../stacker/stacker.component';
 import { ChipsComponent } from '../chips/chips.component';
 import { NewPokerGameService } from './new-poker-game.service';
 import { SyncModule } from '../sync/sync.module';
+import { DevMenuModule } from '../dev-menu/dev-menu.module';
 import { FastForwardIconComponent } from '../fast-forward-icon/fast-forward-icon.component';
 
 @NgModule({
@@ -32,6 +33,7 @@ import { FastForwardIconComponent } from '../fast-forward-icon/fast-forward-icon
     MatGridListModule,
     FormsModule,
     SyncModule,
+    DevMenuModule,
   ],
   exports: [PokerGameComponent],
   providers: [PokerGameService, NewPokerGameService],
