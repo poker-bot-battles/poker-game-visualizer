@@ -158,7 +158,6 @@ export class NewPokerGameService {
   getTransformedData() {
     const game: Game = { hands: [] };
     game.hands = this.getHands();
-    console.log('hands', game.hands);
     return game;
   }
 
@@ -542,12 +541,12 @@ export class NewPokerGameService {
       }
       if (nextToActId != null && nextToActId == handevents[i].player) {
         playerstates.set(handevents[i].player, {
-          win_chance: Math.round(handevents[i].win_chance! * 100),
+          win_chance: Math.round((handevents[i].win_chance || 0) * 100),
           next_to_act: true,
         });
       } else {
         playerstates.set(handevents[i].player, {
-          win_chance: Math.round(handevents[i].win_chance! * 100),
+          win_chance: Math.round((handevents[i].win_chance || 0) * 100),
         });
       }
     }

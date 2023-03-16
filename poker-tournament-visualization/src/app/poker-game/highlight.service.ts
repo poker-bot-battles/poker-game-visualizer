@@ -14,11 +14,6 @@ export class HighlightService {
     gameTransformed: Game,
     timerestrain: number,
   ): number[] {
-    const highlightedGame: Game = { hands: [] };
-
-    console.log('gameRaw',gameRaw, )
-
-    // add highlight logic
     const gameList: HandJSON[] = [];
     for (let i = 0; i < gameRaw.length; i++) {
       gameList.push(gameRaw[i]);
@@ -26,24 +21,18 @@ export class HighlightService {
     this.addHandScores(gameList);
     const sortedGames = gameList
       .sort((a, b) => (b.highlight_score ?? 0) - (a.highlight_score ?? 0))
-      .map((x) => ({count: x.hand_count, score: x.highlight_score}));
+      .map((x) => ({ count: x.hand_count, score: x.highlight_score }));
     const highlights: number[] = [];
-    let sumTimeConstant: number = 0;
+    let sumTimeConstant = 0;
     sortedGames.forEach((x) => {
       if (timerestrain > sumTimeConstant) {
         sumTimeConstant =
           sumTimeConstant + gameTransformed.hands[x.count].totalTimeconstant;
         highlights.push(x.count);
-        console.log('count by score', x.count, x.score)
       }
     });
-    console.log(
-      'highlight',
-      highlights.sort((a, b) => a - b),
-    );
 
     const highlightHandIds = highlights.sort((a, b) => a - b);
-    console.log('highlightHandIds', highlightHandIds);
     return highlightHandIds;
   }
 
@@ -97,7 +86,7 @@ export class HighlightService {
     const rewards = handData.hand_events
       .filter((x) => x.type === 'reward')
       .map((x) => x.reward ?? 0);
-    const potSize = rewards.filter((x) => x > 0).reduce((acc, x) => acc + x);
+    const potSize = rewards.filter((x) => x > 0).reduce((acc, x) => acc + x, 0);
     const potSizeInBigBlinds = potSize / bigBlind;
     return potSizeInBigBlinds * 1 + potSize * 0.001;
   }
