@@ -23,29 +23,11 @@ export class SyncComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.subscription = this.service.onMessage().subscribe((message) => {
-      this.handleMessage(message);
-    });
-    this.service.connect();
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const tableid = urlParams.get('table');
-    this.service.sendMessage({
-      cmd: 'connect',
-      type: 'client',
-      requested_id: tableid,
-    });
-  }
-
-  private handleMessage(message: any) {
-    if (message) {
-      console.log(message);
-      this.messages.push(message);
-      if (message['cmd'] == 'ACK') {
-        this.setId(message['clientId']);
-      } else if (message['cmd'] == 'start') {
-        this.status = 'start';
-      }
+    if (tableid) {
+      this.setId(tableid);
     }
   }
 
