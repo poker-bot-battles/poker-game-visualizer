@@ -11,6 +11,7 @@ import { SyncService, TIME_ENDPOINT } from '../sync/sync.service';
 import { HttpClient } from '@angular/common/http';
 import { HighlightService } from './highlight.service';
 import { first } from 'rxjs/operators';
+import { devMenuService } from '../dev-menu/dev-menu.service';
 
 @Component({
   selector: 'app-poker-game',
@@ -42,6 +43,7 @@ export class PokerGameComponent implements OnInit, OnChanges {
     private highlightService: HighlightService,
     private httpClient: HttpClient,
     private syncService: SyncService,
+    private devMenuService: devMenuService,
   ) {
     this.game = this.newPokerGameService.getTransformedData();
     this.speed = this.defaultSpeed;
@@ -54,6 +56,14 @@ export class PokerGameComponent implements OnInit, OnChanges {
     console.log('COMP init poker game ... ');
     // use api endpoint to get the delay every 30 seconds
     this.startTimer();
+    // subscribe to the dev menu service
+    this.devMenuService.onMsg().subscribe((msg) => {
+      if (msg == 'TimerFinished') {
+        this.toggle();
+      } else if (msg == 'LoadGame') {
+        this.loadGame();
+      }
+    });
   }
   ngOnDestroy() {
     this.stopTimer();
@@ -105,7 +115,6 @@ export class PokerGameComponent implements OnInit, OnChanges {
         (this.secondsToSee * 1000) / this.defaultSpeed,
       );
       this.handIdx = 0;
-      this.stage = Stage.Preflop;
     });
   }
 

@@ -8,7 +8,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatLegacySliderModule as MatSliderModule } from '@angular/material/legacy-slider';
 import { SyncModule } from './sync/sync.module';
 import { HttpClientModule } from '@angular/common/http';
-
+import { DevMenuModule } from './dev-menu/dev-menu.module';
+import { FormsModule  } from '@angular/forms';
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -19,6 +20,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatSliderModule,
     SyncModule,
     HttpClientModule,
+    DevMenuModule,
+    FormsModule,
   ],
   exports: [],
   providers: [],
