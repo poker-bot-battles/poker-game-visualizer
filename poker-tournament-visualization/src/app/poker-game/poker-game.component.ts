@@ -6,8 +6,9 @@ import {
   Hand,
 } from './new-poker-game.service';
 import { TestPokerGameService } from './test-poker-game.service';
-import { Subscription } from 'rxjs';
-import { SyncService } from '../sync/sync.service';
+import { Subscription, interval } from 'rxjs';
+import { SyncService, TIME_ENDPOINT } from '../sync/sync.service';
+import { HttpClient } from '@angular/common/http';
 import { HighlightService } from './highlight.service';
 import { first } from 'rxjs/operators';
 import { devMenuService } from '../dev-menu/dev-menu.service';
@@ -28,97 +29,111 @@ export class PokerGameComponent implements OnInit, OnChanges {
   isPlay = false;
   interestingHandIdx = 0;
   interestingHands: Hand[] = [];
-  endReached: boolean = false;
+  endReached = false;
   speed: number; // milliseconds pr. action
-  defaultSpeed: number = 300; // milliseconds pr. action (multiplied by some constant based on the stage - see new-poker-game.service.ts)
-  fastForwardSpeed: number = 100; // milliseconds pr. action (not multiplied by any constant)
-  fastForwarding: boolean = false;
+  defaultSpeed = 300; // milliseconds pr. action (multiplied by some constant based on the stage - see new-poker-game.service.ts)
+  fastForwardSpeed = 100; // milliseconds pr. action (not multiplied by any constant)
+  fastForwarding = false;
   showControls = false;
+  timeSubscription: Subscription | undefined;
 
   constructor(
     private newPokerGameService: NewPokerGameService,
     private testPokerGameService: TestPokerGameService,
     private highlightService: HighlightService,
+    private httpClient: HttpClient,
     private syncService: SyncService,
-    private devMenuService: devMenuService
+    private devMenuService: devMenuService,
   ) {
     this.game = this.newPokerGameService.getTransformedData();
     this.speed = this.defaultSpeed;
-    this.highlightHandIds = this.highlightService.getHighlightedHands(
-      this.newPokerGameService.game,
-      this.game,
-      (this.secondsToSee * 1000) / this.defaultSpeed
-    );
+    this.highlightHandIds = [];
     this.handIdx = 0;
     this.stage = Stage.Preflop;
   }
 
   ngOnInit(): void {
-    //subscribe to the dev menu service
+    console.log('COMP init poker game ... ');
+    // use api endpoint to get the delay every 30 seconds
+    this.startTimer();
+    // subscribe to the dev menu service
     this.devMenuService.onMsg().subscribe((msg) => {
-      if (msg == "TimerFinished") {
+      if (msg == 'TimerFinished') {
         this.toggle();
-      } else if (msg == "LoadGame") {
+      } else if (msg == 'LoadGame') {
         this.loadGame();
       }
-    })
+    });
+  }
+  ngOnDestroy() {
+    this.stopTimer();
+  }
 
-    this.syncSubscription = this.syncService
-      .onMessage()
-      .subscribe((message) => {
-        if (message && message['cmd'] == 'start') {
-          console.log('will start when loading is done ... ');
+  startTimer() {
+    this.timeSubscription = interval(10000).subscribe(() => {
+      this.httpClient
+        .get(TIME_ENDPOINT)
+        .pipe(first())
+        .subscribe((data: any) => {
+          console.log('COMP got time from api', data);
 
-          if (this.newPokerGameService.isLoading) {
-            this.newPokerGameService.isLoading.pipe(first()).subscribe(() => {
-              console.log('starting after waiting ... ');
+          const startTime = parseInt(data);
+          const delay = startTime * 1000 - Date.now();
+          // console.log('COMP starting in', delay / 1000 / 60, 'minutes');
+
+          if (delay < 0) {
+            setTimeout(() => {
+              this.loadGame();
+              this.stopTimer();
+              console.log('COMP starting load and stopping timer ... ');
+            }, delay - 1000);
+
+            setTimeout(() => {
               if (!this.isPlay) {
                 this.toggle();
               }
-            });
-          } else {
-            console.log('already loaded starting now ... ');
-            if (!this.isPlay) {
-              this.toggle();
-            }
+            }, delay);
           }
-        } else if (message && message['cmd'] == 'load') {
-          if (this.isPlay) {
-            this.toggle();
-          }
-          console.log('load instruction ... ');
-          const jsonnr = this.syncService.id;
-          const jsonToPlay = 'table-' + jsonnr + '.json';
-          console.log(jsonToPlay);
-          console.log('after logging json');
-          this.newPokerGameService.setNewGame(jsonToPlay);
-          this.loadGame();
-
-        }
-      });
-  }
-
-  loadGame() {
-    this.newPokerGameService.isLoading.pipe().subscribe(() => {
-      console.log('finishing load ... ');
-      this.game = this.newPokerGameService.getTransformedData();
-      this.highlightHandIds = this.highlightService.getHighlightedHands(
-        this.newPokerGameService.game,
-        this.game,
-        (this.secondsToSee * 1000) / this.speed,
-      );
-      this.handIdx = this.highlightHandIds[0];
-      this.stage = Stage.Preflop;
+        });
     });
   }
 
-  ngOnChanges(): void {}
+  loadGame() {
+    const id = this.syncService.id;
+    if (id) {
+      this.newPokerGameService.setNewGame(id);
+    } else {
+      this.newPokerGameService.setNewGame('1'); // default
+    }
+    this.newPokerGameService.isLoading.pipe().subscribe(async () => {
+      console.log('COMP finishing load ... ');
+      this.game = await this.newPokerGameService.getTransformedData();
+      this.speed = this.defaultSpeed;
+      this.highlightHandIds = this.highlightService.getHighlightedHands(
+        this.newPokerGameService.game,
+        this.game,
+        (this.secondsToSee * 1000) / this.defaultSpeed,
+      );
+      this.handIdx = 0;
+    });
+  }
+
+  stopTimer() {
+    if (this.timeSubscription) {
+      this.timeSubscription.unsubscribe();
+    }
+  }
+
+  ngOnChanges(): void {
+    null;
+  }
 
   toggleControls() {
     this.showControls = !this.showControls;
   }
 
   getTimeForAction(handIdx: number, actionIdx: number) {
+    console.log('COMP getTimeForAction', handIdx, this.highlightHandIds);
     if (this.highlightHandIds?.includes(handIdx)) {
       this.fastForwarding = false;
       return (

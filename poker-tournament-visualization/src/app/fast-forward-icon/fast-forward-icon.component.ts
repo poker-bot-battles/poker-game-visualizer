@@ -14,11 +14,11 @@ export class FastForwardIconComponent implements core.OnInit, core.OnChanges {
     this.fastForwarding = true;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    null;
+  }
 
   ngOnChanges(changes: { [fastForwarding: string]: core.SimpleChange }): void {
-    //console.log('card group changes');
-    //console.log(JSON.stringify(changes));
     if (changes['fastForwarding']) {
       this.fastForwarding = changes['fastForwarding'].currentValue;
     }
