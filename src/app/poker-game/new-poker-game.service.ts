@@ -293,7 +293,7 @@ export class NewPokerGameService {
                 .filter((x) => x.type != 'win_chance')
                 .slice(0, 5),
             );
-            console.log(cards);
+            // console.log(cards);
             boardStepsLeft = cards.length - 1;
 
             if (this.isSlowFlow(cards, currentStage)) {
@@ -552,7 +552,7 @@ export class NewPokerGameService {
       number,
       PlayerState
     >();
-    console.log('Handevents', handevents);
+    // console.log('Handevents', handevents);
     for (let i = 0; i < handevents.length; i++) {
       if (handevents[i].type != 'win_chance') {
         break;
@@ -782,7 +782,7 @@ export class NewPokerGameService {
   }
 
   getCardsforBoard(events: (HandEvent | null)[]) {
-    console.log('cards', events);
+    // console.log('cards', events);
     const cards: string[] = [];
     for (let i = 0; i < events.length; i++) {
       if (events[i] == null || events[i]?.player != -1) {

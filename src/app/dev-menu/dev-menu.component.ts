@@ -80,7 +80,7 @@ export class DevMenuComponent implements OnInit, OnDestroy  {
       .subscribe(data => {
         if (!data["timestamp"]) return;
         let date = new Date(+data["timestamp"]);
-        //console.log("Got new Timestamp: ", date.toLocaleString("dk-DK"));
+        console.log("Got new Timestamp: ", date.toLocaleString("dk-DK"));
         if (date.toLocaleString("dk-DK") == this.timestamp) return;
         console.log("Setting new Timestamp")
         this.timestamp = date.toLocaleString("dk-DK");
