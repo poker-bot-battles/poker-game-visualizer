@@ -4,8 +4,7 @@ import { AppComponent } from './app.component';
 import { PokerGameComponent } from './poker-game/poker-game.component';
 
 const routes: Routes = [
-  { path: 'app', component: PokerGameComponent },
-  { path: '**', redirectTo: '/app', pathMatch: 'full' },
+  { path: '**', component: PokerGameComponent },
 ];
 
 @NgModule({
