@@ -33,6 +33,7 @@ export class PokerGameComponent implements OnInit, OnChanges {
   speed: number; // milliseconds pr. action
   defaultSpeed = 300; // milliseconds pr. action (multiplied by some constant based on the stage - see new-poker-game.service.ts)
   fastForwardSpeed = 100; // milliseconds pr. action (not multiplied by any constant)
+  absoluteFastestSpeedDoNotExceed = 25; // milliseconds pr. action (not multiplied by any constant)
   fastForwarding = false;
   showControls = false;
   timeSubscription: Subscription | undefined;
@@ -141,6 +142,9 @@ export class PokerGameComponent implements OnInit, OnChanges {
         this.defaultSpeed
       );
     } else {
+      if (this.fastForwarding) {
+        return Math.max(this.speed * 0.9, this.absoluteFastestSpeedDoNotExceed);
+      }
       this.fastForwarding = true;
       return this.fastForwardSpeed;
     }
@@ -154,8 +158,15 @@ export class PokerGameComponent implements OnInit, OnChanges {
         this.fastForwarding = false;
         this.speed = this.defaultSpeed;
       } else {
-        this.fastForwarding = true;
-        this.speed = this.fastForwardSpeed;
+        if (this.fastForwarding) {
+          this.speed = Math.max(
+            this.speed * 0.9,
+            this.absoluteFastestSpeedDoNotExceed,
+          );
+        } else {
+          this.fastForwarding = true;
+          this.speed = this.fastForwardSpeed;
+        }
       }
       this.movestep();
     }
@@ -177,8 +188,15 @@ export class PokerGameComponent implements OnInit, OnChanges {
               this.fastForwarding = false;
               this.speed = this.defaultSpeed;
             } else {
-              this.fastForwarding = true;
-              this.speed = this.fastForwardSpeed;
+              if (this.fastForwarding) {
+                this.speed = Math.max(
+                  this.speed * 0.9,
+                  this.absoluteFastestSpeedDoNotExceed,
+                );
+              } else {
+                this.fastForwarding = true;
+                this.speed = this.fastForwardSpeed;
+              }
             }
             this.handSliderOnChange(newHandIdx);
           } else {
