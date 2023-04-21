@@ -186,8 +186,8 @@ p.name {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.15rem;
+  color: rgba(255, 255, 255, 0.814);
 }
 .player .player__information--score {
   margin-top: 2px;
