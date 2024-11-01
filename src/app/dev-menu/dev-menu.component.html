@@ -17,5 +17,9 @@
     <button (click)="getRemoteSyncTime()">Sync Now</button>
     <h3 type="text">{{timestamp ? "Starting at: "  + timestamp : "No timestamp set"}}</h3>
     <h2 class="countdown">{{countdown}} Seconds</h2>
+
+    <h2>Game speed</h2>
+    <input type="range" min="25" max="300" step="1" [(ngModel)]="gameSpeed" (ngModelChange)="setGameSpeed($event)"/>
+    <h3>{{gameSpeed}} milliseconds pr. action</h3>
   </div>
 </div>

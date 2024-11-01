@@ -11,7 +11,7 @@ import { SyncService, TIME_ENDPOINT } from '../sync/sync.service';
 import { HttpClient } from '@angular/common/http';
 import { HighlightService } from './highlight.service';
 import { first } from 'rxjs/operators';
-import { devMenuService } from '../dev-menu/dev-menu.service';
+import { DevMenuMessage, devMenuService } from '../dev-menu/dev-menu.service';
 
 @Component({
   selector: 'app-poker-game',
@@ -58,11 +58,15 @@ export class PokerGameComponent implements OnInit, OnChanges {
     // use api endpoint to get the delay every 30 seconds
     this.startTimer();
     // subscribe to the dev menu service
-    this.devMenuService.onMsg().subscribe((msg) => {
-      if (msg == 'TimerFinished') {
+    this.devMenuService.onMsg().subscribe((msg: DevMenuMessage) => {
+      const { message } = msg;
+      if (message == 'TimerFinished') {
         this.toggle();
-      } else if (msg == 'LoadGame') {
+      } else if (message == 'LoadGame') {
         this.loadGame();
+      } else if (message == 'SpeedChange') {
+        const { value } = msg;
+        this.defaultSpeed = value;
       }
     });
   }
@@ -129,13 +133,17 @@ export class PokerGameComponent implements OnInit, OnChanges {
     null;
   }
 
+  isPreviewGame(): boolean {
+    return (this.highlightHandIds?.length ?? 0) === 0;
+  }
+
   toggleControls() {
     this.showControls = !this.showControls;
   }
 
   getTimeForAction(handIdx: number, actionIdx: number) {
     console.log('COMP getTimeForAction', handIdx, this.highlightHandIds);
-    if (this.highlightHandIds?.includes(handIdx)) {
+    if (this.isPreviewGame() || this.highlightHandIds?.includes(handIdx)) {
       this.fastForwarding = false;
       return (
         this.game.hands[handIdx].steps[actionIdx].timeconstant *
@@ -154,7 +162,10 @@ export class PokerGameComponent implements OnInit, OnChanges {
     this.isPlay = !this.isPlay;
     if (this.isPlay && this.game) {
       this.endReached = false;
-      if (this.highlightHandIds?.includes(this.handIdx)) {
+      if (
+        this.isPreviewGame() ||
+        this.highlightHandIds?.includes(this.handIdx)
+      ) {
         this.fastForwarding = false;
         this.speed = this.defaultSpeed;
       } else {
@@ -179,12 +190,14 @@ export class PokerGameComponent implements OnInit, OnChanges {
           this.sliderOnChange(this.actionIdx + 1);
         } else if (this.actionIdx == this.getMaxActions() && this.endReached) {
           const newHandIdx = this.handIdx + 1;
+          console.log("NewHandIdx", newHandIdx);
           this.endReached = false;
           if (
-            this.highlightHandIds &&
-            this.interestingHandIdx < this.highlightHandIds.length
+            this.isPreviewGame() ||
+            (this.highlightHandIds &&
+              this.interestingHandIdx < this.highlightHandIds.length)
           ) {
-            if (this.highlightHandIds.includes(newHandIdx)) {
+            if (this.highlightHandIds?.includes(newHandIdx)) {
               this.fastForwarding = false;
               this.speed = this.defaultSpeed;
             } else {
