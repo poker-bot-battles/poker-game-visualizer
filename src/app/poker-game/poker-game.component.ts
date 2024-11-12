@@ -190,7 +190,6 @@ export class PokerGameComponent implements OnInit, OnChanges {
           this.sliderOnChange(this.actionIdx + 1);
         } else if (this.actionIdx == this.getMaxActions() && this.endReached) {
           const newHandIdx = this.handIdx + 1;
-          console.log("NewHandIdx", newHandIdx);
           this.endReached = false;
           if (
             this.isPreviewGame() ||
