@@ -19,6 +19,7 @@ export class DevMenuComponent implements OnInit, OnDestroy  {
   public countdown: number = 0;
   private timerInterval: any;
   private syncInterval: any;
+  public gameSpeed: number = 300;
 
   public jsonUrl: string = "";
   public syncUrl: string = "";
@@ -66,6 +67,11 @@ export class DevMenuComponent implements OnInit, OnDestroy  {
     this.newPokerGameService.setNewGameFromURL(this.jsonUrl);
     this.devMenuService.sendLoadGame();
 
+  }
+
+  setGameSpeed(speed: number):void {
+    this.gameSpeed = speed;
+    this.devMenuService.sendSpeedChange(speed);
   }
 
   toggleMenu():void {

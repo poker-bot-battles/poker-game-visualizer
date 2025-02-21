@@ -2,11 +2,14 @@
 // `ng build` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
+const baseUrl = 'https://api.pokerbot.dk';
+
 export const environment = {
   production: false,
-  dataEndpoint: 'http://localhost:5140/data/', // testrunde1/run-20220424-214441-0.json
-  timeEndpoint: 'http://localhost:5140/get-time/',
-  reconnectInterval: 2000
+  dataEndpoint: `${baseUrl}/data/`, // testrunde1/run-20220424-214441-0.json
+  timeEndpoint: `${baseUrl}/get-time`,
+  botEndpoint: `${baseUrl}/bots/`,
+  reconnectInterval: 2000,
 };
 
 /*

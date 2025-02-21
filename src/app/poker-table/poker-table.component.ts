@@ -9,17 +9,15 @@ import {
 import {
   Game,
   PlayerState,
-  Player,
-  Step,
   BoardState,
 } from '../poker-game/new-poker-game.service';
-import {
-  History,
-  PlayerStateOld,
-  Stage,
-} from '../poker-game/poker-game.service';
+import { History, Stage } from '../poker-game/poker-game.service';
 import * as confetti from 'canvas-confetti';
-import { coerceStringArray } from '@angular/cdk/coercion';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+import { SyncService } from '../sync/sync.service';
+
+const BOT_ENDPOINT = environment.botEndpoint;
 
 @Component({
   selector: 'app-poker-table',
@@ -35,13 +33,18 @@ export class PokerTableComponent implements OnInit, OnChanges {
   history: History[] = [];
   community: string[] = [];
   board: BoardState = {};
+  started = false;
+  tempPlayers: PlayerState[] = [];
 
   playingConfetti = false;
 
   pot = 0;
   myCanvas: HTMLCanvasElement | undefined;
   myConfetti: confetti.CreateTypes | undefined;
-  constructor() {}
+  constructor(
+    private httpClient: HttpClient,
+    private syncService: SyncService,
+  ) {}
 
   ngOnInit(): void {
     this.myCanvas = document.createElement('canvas');
@@ -54,6 +57,20 @@ export class PokerTableComponent implements OnInit, OnChanges {
     this.myCanvas.style.left = '0';
     this.myCanvas.style.zIndex = '9999';
 
+    setInterval(
+      () =>
+        this.httpClient
+          .get(`${BOT_ENDPOINT}${this.syncService.id}`)
+          .subscribe((data) => {
+            this.tempPlayers = (data as string[]).map((x: string) => ({
+              name: x,
+              stack: 1000,
+              seatstate: 'active',
+            }));
+          }),
+      5000,
+    );
+
     this.myConfetti = confetti.create(this.myCanvas, {
       resize: true,
       useWorker: true,
@@ -62,9 +79,19 @@ export class PokerTableComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: { [property: string]: SimpleChange }): void {
     this.board = this.setBoardState();
+    this.started = this.hand != 0 || this.step != 0;
   }
 
   getPlayer(id: number): PlayerState {
+    if (!this.started && this.syncService.id != null) {
+      if (this.tempPlayers.length == 0) {
+        return {
+          seatstate: 'not-active',
+        };
+      }
+      return this.tempPlayers[id];
+    }
+
     const steps = this.game.hands[this.hand].steps
       .slice(0, this.step + 1)
       .filter((x) => x.playerStates != null && x.playerStates.has(id));
