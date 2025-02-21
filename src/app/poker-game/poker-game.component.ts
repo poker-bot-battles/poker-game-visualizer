@@ -83,8 +83,8 @@ export class PokerGameComponent implements OnInit, OnChanges {
           console.log('COMP got time from api', data);
 
           const startTime = parseInt(data);
-          const delay = startTime * 1000 - Date.now();
-          // console.log('COMP starting in', delay / 1000 / 60, 'minutes');
+          const delay = startTime - Date.now();
+          console.log('COMP starting in', delay / 1000 / 60, 'minutes');
 
           if (delay < 0) {
             setTimeout(() => {
