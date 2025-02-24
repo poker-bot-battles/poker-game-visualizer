@@ -1,5 +1,6 @@
 /* eslint-disable require-jsdoc */
 import {
+  ChangeDetectorRef,
   Component,
   Input,
   OnChanges,
@@ -67,6 +68,7 @@ export class PokerTableComponent implements OnInit, OnChanges {
               stack: 1000,
               seatstate: 'active',
             }));
+            ChangeDetectorRef.prototype.detectChanges();
           }),
       5000,
     );
