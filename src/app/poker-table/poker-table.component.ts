@@ -93,6 +93,11 @@ export class PokerTableComponent implements OnInit, OnChanges {
           seatstate: 'not-active',
         };
       }
+      if (this.tempPlayers[id] == null) {
+        return {
+          seatstate: 'not-active',
+        };
+      }
       return this.tempPlayers[id];
     }
 
