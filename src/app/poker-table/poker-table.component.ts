@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   Input,
+  NgZone,
   OnChanges,
   OnInit,
   SimpleChange,
@@ -45,6 +46,7 @@ export class PokerTableComponent implements OnInit, OnChanges {
   constructor(
     private httpClient: HttpClient,
     private syncService: SyncService,
+    private changeDetectorRef: ChangeDetectorRef,
   ) {}
 
   ngOnInit(): void {
@@ -68,7 +70,7 @@ export class PokerTableComponent implements OnInit, OnChanges {
               stack: 1000,
               seatstate: 'active',
             }));
-            ChangeDetectorRef.prototype.detectChanges();
+            this.changeDetectorRef.detectChanges();
           }),
       5000,
     );
