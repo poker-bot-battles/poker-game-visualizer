@@ -107,8 +107,6 @@ export class PokerGameComponent implements OnInit, OnChanges {
     const id = this.syncService.id;
     if (id) {
       this.newPokerGameService.setNewGame(id);
-    } else {
-      this.newPokerGameService.setNewGame('1'); // default
     }
     this.newPokerGameService.isLoading.pipe().subscribe(async () => {
       console.log('COMP finishing load ... ');
