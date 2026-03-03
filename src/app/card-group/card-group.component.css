@@ -48,13 +48,12 @@
   content: "";
   width: 100%;
   height: 100%;
-  background-image: url("../../assets/images/netcompany-logotype-white-RGB.png");
+  background-image: url("../../assets/images/logo_icon_square.png");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 85%;
   display: block;
-  filter: invert();
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 .comunity-cards {
