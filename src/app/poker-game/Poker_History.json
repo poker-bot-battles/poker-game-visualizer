@@ -3,7 +3,7 @@
         "hand_count": 0,
         "active_players": [
             {
-                "name": "good_bot",
+                "name": "Very very long name for a bot to test the UI",
                 "id": 0,
                 "stack": 1000
             },
